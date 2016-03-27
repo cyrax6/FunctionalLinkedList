@@ -43,7 +43,7 @@ public:
 
     // TODO: Make these private to restrict memory management (ex on stack)
 
-    LinkedList(DataType val, NodeType tail = nullptr) : data(val), next(tail) { }
+    LinkedList(DataType val, NodeType tail = nullptr) : data(val), next(tail) {}
 };
 
 template<typename T>
@@ -110,24 +110,45 @@ typename LinkedList<T>::NodeType Search(typename LinkedList<T>::NodeType token, 
 template<typename T>
 typename LinkedList<T>::NodeType InsertAfter(typename LinkedList<T>::DataType data, typename LinkedList<T>::NodeType token, typename LinkedList<T>::NodeType seq)
 {
-    if (seq->IsTail()) {
+    if (!seq) {
         return nullptr;
     }
 
     typename LinkedList<T>::NodeType result = nullptr;
 
-    if (seq == token) {
-        result = Cons<T>(data, Rest<T>(seq));
+    auto first = First<T>(seq);
+    auto rest = Rest<T>(seq);
+    if (first == token) {
+        result = Cons<T>(data, rest);
     } else {
-        result = InsertAfter<T>(data, token, Rest<T>(seq));
+        result = InsertAfter<T>(data, token, rest);
     }
     
     if (result)
-        return Cons<T>(seq, result);
+        return Cons<T>(first, result);
     else
         return result;
 }
 
 template<typename T>
-typename LinkedList<T>::NodeType InsertBefore(typename LinkedList<T>::DataType data, typename LinkedList<T>::NodeType token, typename LinkedList<T>::NodeType seq) { }
+typename LinkedList<T>::NodeType InsertBefore(typename LinkedList<T>::DataType data, typename LinkedList<T>::NodeType token, typename LinkedList<T>::NodeType seq)
+{
+    if(!seq)
+        return nullptr;
+    
+    typename LinkedList<T>::NodeType result = nullptr;
+    auto first = First<T>(seq);
+    if(first == token)
+    {
+        result = Cons<T>(data, seq);
+    }
+    else
+    {
+        auto rest = Rest<T>(seq);
+        auto new_seq = InsertBefore<T>(data, token, rest);
+        if(new_seq)
+            result = Cons<T>(seq, new_seq);
+    }
+    return result;
+}
 #endif /* LINKEDLIST_H */

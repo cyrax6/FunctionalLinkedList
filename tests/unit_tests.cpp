@@ -169,13 +169,54 @@ void testInsertAfter()
     {
         std::cout << "%TEST_FAILED% time=0 testname=testInsertAfter (unit_tests) message=result should have been a new node" << std::endl;
     }
+    
+    auto new_result = InsertAfter<string>("9", one, three);
+    if(!Search<string>("9", new_result))
+    {
+        std::cout << "%TEST_FAILED% time=0 testname=testInsertAfter (unit_tests) message=error while inserting to tail" << std::endl;
+    }
+}
+
+void testInsertBefore()
+{
+    shared_ptr<const LinkedList < string>> one = LinkedList<string>::CreateList("10");
+    auto two = LinkedList<string>::AddHead("20", one);
+    auto three = LinkedList<string>::AddHead("30", two);
+    auto disjoint = LinkedList<string>::CreateList("NaN");
+    
+    if(InsertBefore<string>("29", disjoint, three))
+    {
+        std::cout << "%TEST_FAILED% time=0 testname=testInsertBefore (unit_tests) message=InserAfter should have returned a null" << std::endl;
+    }
+    
+    auto result = InsertBefore<string>("39", three, three);
+    if(result->Behead()->GetData() != "30" && result->GetData() != "39")
+    {
+        std::cout << "%TEST_FAILED% time=0 testname=testInsertBefore (unit_tests) message=Node after head should have been 30 instead of "<< result->Behead()->GetData() << std::endl;
+    }
+
+    if(result == three)
+    {
+        std::cout << "%TEST_FAILED% time=0 testname=testInsertBefore (unit_tests) message=result should have been a new node" << std::endl;
+    }
+    cout << "Result after creating a new head 39" << endl;
+    PrintSequence<string>(result);
+    
+    auto new_result = InsertBefore<string>("11", one, three);
+    if(!Search<string>("11", new_result))
+    {
+        std::cout << "%TEST_FAILED% time=0 testname=testInsertBefore (unit_tests) message=error while inserting to tail" << std::endl;
+    }
+    
+    cout << "Result after appending 11" << endl;
+    PrintSequence<string>(new_result);
 }
 
 int main(int argc, char** argv)
 {
     std::cout << "%SUITE_STARTING% unit_tests" << std::endl;
     std::cout << "%SUITE_STARTED%" << std::endl;
-
+/*
     std::cout << "%TEST_STARTED% testCreateList (unit_tests)" << std::endl;
     testCreateList();
     std::cout << "%TEST_FINISHED% time=0 testCreateList (unit_tests)" << std::endl;
@@ -207,11 +248,15 @@ int main(int argc, char** argv)
     std::cout << "%TEST_STARTED% testSearch2 (unit_tests)" << std::endl;
     testSearchNode();
     std::cout << "%TEST_FINISHED% time=0 testSearch2 (unit_tests)" << std::endl;
-
+*/
     std::cout << "%TEST_STARTED% testInsertAfter (unit_tests)" << std::endl;
     testInsertAfter();
     std::cout << "%TEST_FINISHED% time=0 testInsertAfter (unit_tests)" << std::endl;
 
+    std::cout << "%TEST_STARTED% testInsertBefore (unit_tests)" << std::endl;
+    testInsertBefore();
+    std::cout << "%TEST_FINISHED% time=0 testInsertBefore (unit_tests)" << std::endl;
+    
     std::cout << "%SUITE_FINISHED% time=0" << std::endl;
 
     return(EXIT_SUCCESS);
